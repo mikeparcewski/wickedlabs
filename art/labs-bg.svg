@@ -1,0 +1,116 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+<!-- Wicked Labs background art: the lab behind the wicked tools, the components and their parts.
+     A mask: black strokes on nothing, painted in the page's ink (art/README.md). Same grammar as the
+     product sites' line art. The flask's outline is wicked-web's Topbar flask glyph, x11. -->
+<g fill="none" stroke="black" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- connectors: dashed wires with arrowheads, circuit traces ending in vias, dashed drops ending in a node -->
+  <path d="M276 168 H544" stroke-dasharray="5 9"/><path d="M536 162 l8 6 l-8 6"/>
+  <path d="M776 164 H994" stroke-dasharray="5 9"/><path d="M986 158 l8 6 l-8 6"/>
+  <path d="M1136 160 H1250 L1270 140 H1362"/><circle cx="1367" cy="140" r="4"/>
+  <path d="M330 470 H560" stroke-dasharray="5 9"/><path d="M552 464 l8 6 l-8 6"/>
+  <path d="M816 474 H1010" stroke-dasharray="5 9"/><path d="M1002 468 l8 6 l-8 6"/>
+  <path d="M1182 498 H1300 L1320 478 H1366"/><circle cx="1371" cy="478" r="4"/>
+  <path d="M290 760 H446" stroke-dasharray="5 9"/><path d="M438 754 l8 6 l-8 6"/>
+  <path d="M612 760 H860" stroke-dasharray="5 9"/><path d="M852 754 l8 6 l-8 6"/>
+  <path d="M926 752 H1244" stroke-dasharray="5 9"/><path d="M1236 746 l8 6 l-8 6"/>
+  <path d="M200 238 V402" stroke-dasharray="6 10"/><circle cx="200" cy="408" r="5"/>
+  <path d="M660 236 V402" stroke-dasharray="6 10"/><circle cx="660" cy="408" r="5"/>
+  <path d="M1073 246 V402" stroke-dasharray="6 10"/><circle cx="1073" cy="408" r="5"/>
+  <path d="M1440 250 V424" stroke-dasharray="6 10"/><circle cx="1440" cy="430" r="5"/>
+  <path d="M212 540 V658" stroke-dasharray="6 10"/><circle cx="212" cy="664" r="5"/>
+  <path d="M700 546 V658" stroke-dasharray="6 10"/><circle cx="700" cy="664" r="5"/>
+  <path d="M1100 572 V670" stroke-dasharray="6 10"/><circle cx="1100" cy="676" r="5"/>
+  <path d="M470 600 l9 10 l16 -22"/><path d="M820 620 l9 10 l16 -22"/><path d="M1250 330 l9 10 l16 -22"/>
+  <circle cx="1530" cy="300" r="6"/><circle cx="380" cy="620" r="6"/>
+
+  <!-- the flask (wicked-web's Topbar flask glyph, x11): its lip, the cone, the liquid, bubbles rising -->
+  <g transform="translate(150 96)">
+    <path d="M28.6 0 H72.6"/>
+    <path d="M39.6 0 V47.3 L0 113.3 A11 11 0 0 0 9.9 128.7 H91.3 A11 11 0 0 0 101.2 113.3 L61.6 47.3 V0" stroke-width="1.8"/>
+    <path d="M17 88 C30 82 42 94 54 88 C66 82 76 92 85 88"/>
+    <circle cx="41.8" cy="104" r="5"/><circle cx="63.8" cy="114" r="4"/><circle cx="52" cy="-16" r="4"/><circle cx="60" cy="-34" r="3"/>
+  </g>
+  <!-- a component diagram: three blocks, their ports and wires -->
+  <g transform="translate(560 100)">
+    <rect width="200" height="120" rx="12" stroke-width="1.8"/>
+    <rect x="16" y="18" width="52" height="30" rx="5"/><rect x="132" y="18" width="52" height="30" rx="5"/><rect x="74" y="74" width="52" height="30" rx="5"/>
+    <path d="M68 33 H132 M42 48 V89 H74 M158 48 V89 H126"/>
+    <circle cx="68" cy="33" r="3"/><circle cx="132" cy="33" r="3"/><circle cx="74" cy="89" r="3"/><circle cx="126" cy="89" r="3"/>
+  </g>
+  <!-- a chip: the die, pin one, four pins a side -->
+  <g transform="translate(1010 104)">
+    <rect x="20" y="20" width="92" height="92" rx="8" stroke-width="1.8"/><rect x="44" y="44" width="44" height="44" rx="4"/><circle cx="32" cy="32" r="3"/>
+    <path d="M20 36 H6 M20 56 H6 M20 76 H6 M20 96 H6 M112 36 H126 M112 56 H126 M112 76 H126 M112 96 H126"/>
+    <path d="M36 20 V6 M56 20 V6 M76 20 V6 M96 20 V6 M36 112 V126 M56 112 V126 M76 112 V126 M96 112 V126"/>
+  </g>
+  <!-- a beaker: rim, graduations, the liquid -->
+  <g transform="translate(1380 96)">
+    <path d="M4 0 H114"/><path d="M12 0 V126 Q12 138 24 138 H94 Q106 138 106 126 V0" stroke-width="1.8"/>
+    <path d="M12 40 H28 M12 64 H22 M12 88 H28 M12 112 H22"/><path d="M16 80 C40 74 64 86 102 78"/>
+  </g>
+  <!-- circuit traces: three runs, a resistor on the first, vias at the ends -->
+  <g transform="translate(140 420)">
+    <path d="M0 20 H60 L80 40 H96 M122 40 H150"/><rect x="96" y="32" width="26" height="16" rx="3"/>
+    <path d="M0 50 H40 L60 70 H120 L140 90 H170"/><path d="M20 100 H70 L90 80 H110"/>
+    <circle cx="-5" cy="20" r="5"/><circle cx="155" cy="40" r="5"/><circle cx="-5" cy="50" r="5"/><circle cx="175" cy="90" r="5"/><circle cx="15" cy="100" r="5"/><circle cx="115" cy="80" r="5"/>
+  </g>
+  <!-- a test-tube rack: four tubes, four levels -->
+  <g transform="translate(580 420)">
+    <rect x="0" y="30" width="220" height="16" rx="4" stroke-width="1.8"/><path d="M14 46 V110 M206 46 V110 M6 110 H214"/>
+    <path d="M30 0 V84 A11 11 0 0 0 52 84 V0 M26 0 H56"/><path d="M80 0 V84 A11 11 0 0 0 102 84 V0 M76 0 H106"/>
+    <path d="M130 0 V84 A11 11 0 0 0 152 84 V0 M126 0 H156"/><path d="M180 0 V84 A11 11 0 0 0 202 84 V0 M176 0 H206"/>
+    <path d="M32 58 H50 M82 64 H100 M132 54 H150 M182 70 H200"/>
+  </g>
+  <!-- a ring molecule with three side groups -->
+  <g transform="translate(1040 420)">
+    <path d="M60 20 L94.6 40 V80 L60 100 L25.4 80 V40 Z" stroke-width="1.8"/><circle cx="60" cy="60" r="24"/>
+    <path d="M94.6 40 L128 21 M25.4 80 L-8 99 M60 100 V130"/>
+    <circle cx="134" cy="18" r="7"/><circle cx="-14" cy="102" r="7"/><circle cx="60" cy="137" r="7"/>
+  </g>
+  <!-- parts: a nut, and a bolt with its thread -->
+  <g transform="translate(1380 440)">
+    <path d="M56 30 L43 52.5 H17 L4 30 L17 7.5 H43 Z" stroke-width="1.8"/><circle cx="30" cy="30" r="11"/>
+    <rect x="84" y="4" width="40" height="20" rx="3" stroke-width="1.8"/><rect x="96" y="24" width="16" height="80" rx="2"/>
+    <path d="M96 40 l16 6 M96 52 l16 6 M96 64 l16 6 M96 76 l16 6 M96 88 l16 6"/>
+  </g>
+  <!-- a round-bottom flask, at the left edge -->
+  <g transform="translate(22 430)">
+    <path d="M22 0 H54"/><path d="M28 0 V40 A38 38 0 1 0 48 40 V0" stroke-width="1.8"/><path d="M6 92 C20 86 30 98 44 92 C56 86 64 96 72 90"/>
+  </g>
+  <!-- the lab notebook: a clipboard, three checks -->
+  <g transform="translate(150 680)">
+    <rect x="0" y="10" width="124" height="150" rx="10" stroke-width="1.8"/><rect x="38" y="0" width="48" height="20" rx="5"/>
+    <path d="M16 50 l6 7 l12 -15 M16 82 l6 7 l12 -15 M16 114 l6 7 l12 -15"/><path d="M44 50 H104 M44 82 H96 M44 114 H104"/>
+  </g>
+  <!-- a microscope: tube, stage, arm, knob, base -->
+  <g transform="translate(460 660)">
+    <g transform="rotate(-20 57 90)"><rect x="44" y="6" width="26" height="84" rx="5" stroke-width="1.8"/><path d="M40 6 H74"/><rect x="50" y="90" width="14" height="16" rx="2"/></g>
+    <path d="M24 124 H104" stroke-width="1.8"/><path d="M96 160 V128 C96 92 84 72 66 60"/><circle cx="96" cy="112" r="7"/>
+    <rect x="16" y="160" width="108" height="14" rx="5" stroke-width="1.8"/>
+  </g>
+  <!-- a dropper and its drop -->
+  <g transform="translate(880 680)">
+    <rect x="0" y="0" width="26" height="36" rx="13" stroke-width="1.8"/><path d="M-4 36 H30"/><path d="M5 36 V100 L13 116 L21 100 V36"/>
+    <path d="M13 132 C13 132 4 144 4 150 A9 9 0 0 0 22 150 C22 144 13 132 13 132 Z"/>
+  </g>
+  <!-- the parts view: a component, exploded along its axis, each part with a leader -->
+  <g transform="translate(1260 690)">
+    <rect width="200" height="120" rx="12" stroke-width="1.6" stroke-dasharray="7 7"/>
+    <path d="M100 8 V112" stroke-dasharray="4 5"/>
+    <rect x="60" y="18" width="80" height="14" rx="4"/><rect x="52" y="48" width="96" height="24" rx="5" stroke-width="1.8"/><rect x="60" y="88" width="80" height="14" rx="4"/>
+    <path d="M140 25 H174 M148 60 H174 M140 95 H174"/><circle cx="178" cy="25" r="3"/><circle cx="178" cy="60" r="3"/><circle cx="178" cy="95" r="3"/>
+  </g>
+  <!-- a pin header and its lead, at the right edge -->
+  <g transform="translate(1516 600)">
+    <rect x="0" y="0" width="52" height="26" rx="4" stroke-width="1.8"/>
+    <circle cx="10" cy="8" r="2.5"/><circle cx="20.7" cy="8" r="2.5"/><circle cx="31.3" cy="8" r="2.5"/><circle cx="42" cy="8" r="2.5"/>
+    <circle cx="10" cy="18" r="2.5"/><circle cx="20.7" cy="18" r="2.5"/><circle cx="31.3" cy="18" r="2.5"/><circle cx="42" cy="18" r="2.5"/>
+    <path d="M26 26 V56 C26 76 12 80 4 96"/>
+  </g>
+</g>
+<g fill="black">
+  <circle cx="420" cy="300" r="2.5"/><circle cx="433" cy="300" r="2.5"/><circle cx="446" cy="300" r="2.5"/>
+  <circle cx="880" cy="330" r="2.5"/><circle cx="893" cy="330" r="2.5"/><circle cx="906" cy="330" r="2.5"/>
+  <circle cx="1210" cy="860" r="2.5"/><circle cx="1223" cy="860" r="2.5"/><circle cx="1236" cy="860" r="2.5"/>
+</g>
+</svg>
