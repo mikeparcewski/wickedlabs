@@ -37,18 +37,21 @@ body{
 }
 
 /* The lab's background art (art/labs-bg.svg; art/README.md): the lab behind the wicked tools, the
-   components and their parts. The family flask, a component diagram, a chip and a beaker; circuit
-   traces, a test-tube rack, a ring molecule, a nut and bolt; the lab notebook, a microscope, a dropper
-   and an exploded parts view, wired by dashed connectors and traces. The product sites' engine and
-   register: ONE fixed layer painted in --ink through its line-art mask (stroke 1.4, outlines 1.8),
-   centred and cover-sized, at 0.08 (0.06 in light), behind everything; it never moves. It replaces the
-   line grid this page wore. */
-body::before{
-  content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background-color:var(--ink);opacity:.08;
-  -webkit-mask:url('art/labs-bg.svg') center/cover no-repeat;mask:url('art/labs-bg.svg') center/cover no-repeat;
+   components and their parts. The flask (wicked-web's Topbar flask glyph, x11), a component diagram,
+   a chip and a beaker; circuit traces, a test-tube rack, a ring molecule, a nut and bolt; the lab
+   notebook, a microscope, a dropper and an exploded parts view, wired by dashed connectors and traces.
+   The product sites' engine and register: ONE fixed layer painted in --ink through its line-art mask
+   (stroke 1.4, outlines 1.8), centred and cover-sized, at 0.08 (0.06 in light), behind everything; it
+   never moves. It replaces the 64px grid this page wore. Only where the veil below can be drawn (color-mix) and the mask works: an
+   older browser keeps the plain page rather than getting the art without its veil. */
+@supports (color:color-mix(in oklab,red 50%,blue)) and ((mask:none) or (-webkit-mask:none)){
+  body::before{
+    content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background-color:var(--ink);opacity:.08;
+    -webkit-mask:url('art/labs-bg.svg') center/cover no-repeat;mask:url('art/labs-bg.svg') center/cover no-repeat;
+  }
+  @media (prefers-color-scheme:light){body::before{opacity:.06}}
 }
-@media (prefers-color-scheme:light){body::before{opacity:.06}}
 /* the glow: today's radial, on the first screen (the box it had when the page fit one screen; the taller
    family footer would otherwise stretch it), now above the art and the veil */
 body::after{
@@ -125,16 +128,16 @@ h1{margin-top:44px;color:var(--ink);font-weight:600;font-size:clamp(2.25rem,5.2v
 .fam-ft .footer-promo-cta{ font-size: var(--text-body); font-weight: var(--weight-strong); color: var(--ink); white-space: nowrap; grid-area: 1 / 2 / 4; }
 .fam-ft .footer-promo:hover .footer-promo-cta{ color: var(--accent); }
 .fam-ft .footer-strip{ border-top: 1px solid var(--hairline); font-family: var(--font-sans); font-size: var(--text-body); color: var(--muted); flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 17px 0px 26px; display: flex; }
-@media (width <= 960px){.fam-ft .footer-main{ flex-wrap: wrap; }}
-@media (width <= 960px){.fam-ft .footer-cols{ grid-template-columns: repeat(2, 1fr); margin-left: 0px; }}
-@media (width <= 600px){.fam-ft .footer-main{ gap: 32px; padding: 40px 0px 28px; }}
-@media (width <= 600px){.fam-ft .footer-brand-block{ max-width: none; }}
-@media (width <= 600px){.fam-ft .footer-cols{ flex-direction: column; gap: 14px; width: 100%; padding-top: 0px; display: flex; }}
-@media (width <= 600px){.fam-ft .footer-cols > div{ align-items: baseline; gap: 16px; display: flex; }}
-@media (width <= 600px){.fam-ft .footer .footer-col-head{ font-size: var(--text-caption); flex: 0 0 6.5rem; margin-bottom: 0px; line-height: 1.35; }}
-@media (width <= 600px){.fam-ft .footer-links{ flex: 1 1 0%; gap: 8px; }}
-@media (width <= 600px){.fam-ft .footer-promo{ grid-template-columns: minmax(0px, 1fr); min-width: 0px; }}
-@media (width <= 600px){.fam-ft .footer-promo-cta{ grid-area: auto / 1; margin-top: 8px; }}
+@media (max-width:960px){.fam-ft .footer-main{ flex-wrap: wrap; }}
+@media (max-width:960px){.fam-ft .footer-cols{ grid-template-columns: repeat(2, 1fr); margin-left: 0px; }}
+@media (max-width:600px){.fam-ft .footer-main{ gap: 32px; padding: 40px 0px 28px; }}
+@media (max-width:600px){.fam-ft .footer-brand-block{ max-width: none; }}
+@media (max-width:600px){.fam-ft .footer-cols{ flex-direction: column; gap: 14px; width: 100%; padding-top: 0px; display: flex; }}
+@media (max-width:600px){.fam-ft .footer-cols > div{ align-items: baseline; gap: 16px; display: flex; }}
+@media (max-width:600px){.fam-ft .footer .footer-col-head{ font-size: var(--text-caption); flex: 0 0 6.5rem; margin-bottom: 0px; line-height: 1.35; }}
+@media (max-width:600px){.fam-ft .footer-links{ flex: 1 1 0%; gap: 8px; }}
+@media (max-width:600px){.fam-ft .footer-promo{ grid-template-columns: minmax(0px, 1fr); min-width: 0px; }}
+@media (max-width:600px){.fam-ft .footer-promo-cta{ grid-area: auto / 1; margin-top: 8px; }}
 
 @media (max-width:900px){
   main{grid-template-columns:1fr;max-width:640px;padding:40px 16px;gap:36px}

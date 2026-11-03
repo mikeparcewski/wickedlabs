@@ -1,10 +1,11 @@
 # The lab's background art
 
-`labs-bg.svg` is the background art behind wickedlabs.ai: the lab behind the wicked tools, the components and
-their parts. The family flask (the header's flask glyph, drawn eleven times larger), a component
-diagram, a chip and a beaker; circuit traces, a test-tube rack, a ring molecule, a nut and bolt; a
-round-bottom flask and a pin header at the edges; the lab notebook, a microscope, a dropper and an
-exploded parts view, wired by dashed connectors and circuit traces. It is original to this repo.
+`labs-bg.svg` is the background art behind wickedlabs.ai: the lab behind the wicked tools, the
+components and their parts. The flask (its outline is the flask glyph of the family header,
+wicked-web's Topbar, drawn eleven times larger), a component diagram, a chip and a beaker; circuit
+traces, a test-tube rack, a ring molecule, a nut and bolt; a round-bottom flask and a pin header at the
+edges; the lab notebook, a microscope, a dropper and an exploded parts view, wired by dashed connectors
+and circuit traces. It is original to this repo.
 
 It is drawn like the product sites' art (wc/ws/wg/we.wickedagile.com): a 1600x900 mask of black strokes
 on nothing (stroke 1.4, outlines 1.8, round caps and joins; dashed wires `5 9` with 8x6 arrowheads,
@@ -25,6 +26,9 @@ recolours with the theme.
   }
   ```
 
+  Wrap it in `@supports (color: color-mix(in oklab, red 50%, blue)) and ((mask: none) or
+  (-webkit-mask: none))`: a browser that can't draw the veil (below) keeps the plain page instead of
+  getting the art without it, and one without masks never paints the ink as a solid block.
   The URL is same-origin and relative to the page; in an Astro build, import the file through Vite
   (a relative `url()` in a style, so it is emitted under the base) or put it in `public/`.
 - **A veil behind every block of text**, so the art never lowers text contrast: the page colour at 60%,
