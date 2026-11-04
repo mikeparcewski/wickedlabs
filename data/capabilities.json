@@ -77,7 +77,7 @@
   {
    "id": "K3",
    "component": "studio",
-   "line": "Data sources: connect Postgres or MySQL, upload a SQLite file, or add a GraphQL API; Test connection says how long it took and whether TLS is verified. An app writes rows only to Postgres, with Allow writes on.",
+   "line": "Data sources: connect Postgres or MySQL, upload a SQLite file, or add a GraphQL API; Test connection says how long it took and whether TLS is verified. An app writes database rows only to Postgres, with Allow writes on.",
    "status": "released"
   },
   {
@@ -89,7 +89,7 @@
   {
    "id": "K5",
    "component": "studio",
-   "line": "The Agents box on a data source: whether agents may see its structure or query its rows, in which projects (none until you pick one), and their recent queries.",
+   "line": "The Agents box on a saved SQL source: whether agents may see its structure and, on Postgres, query its rows; in which projects (none until you pick one); and their recent queries.",
    "status": "released"
   },
   {
@@ -221,7 +221,7 @@
   {
    "id": "D5",
    "component": "crew",
-   "line": "Apps are kept as versions with receipts; an app writes only to Postgres, only with Allow writes on, and a write runs only when a person confirms it.",
+   "line": "Apps are kept as versions with receipts. An app’s actions call an API or write a database row only when a person confirms; row writes go to Postgres only, with Allow writes on.",
    "status": "released"
   },
   {

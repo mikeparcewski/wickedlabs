@@ -70,3 +70,23 @@ test('data/capabilities.json lists every part on the page, released or coming so
   const released = d.capabilities.filter((c: any) => c.status === 'released').map((c: any) => c.line).join(' ');
   expect(released).not.toMatch(/GitLab|Azure DevOps|SQL Server|Oracle|Snowflake|BigQuery|Report’s own figures/);
 });
+
+test('release claims keep their qualifiers (release-1104 review): the Agents box, app writes, data use, the Apps page', () => {
+  const { COMP, ROWS } = pageData();
+  const lines: string[] = [...ROWS.map((r: any) => r[2])];
+  for (const c of COMP) for (const k of ['lead', 'news', 'newsShort', 'benefits']) {
+    const v = c[k];
+    if (typeof v === 'string') lines.push(v);
+    else if (Array.isArray(v)) for (const x of v) lines.push(Array.isArray(x) ? x.join(' ') : x);
+  }
+  const say = (re: RegExp) => lines.filter((l) => re.test(l));
+  // the Agents box is on saved SQL sources, and agents query rows only on Postgres
+  for (const l of say(/Agents box on/)) { expect(l, l).toMatch(/saved SQL source/); expect(l, l).toMatch(/Postgres/); }
+  // an app's writes: database rows go to Postgres only; API actions exist too, and every action waits for a person
+  for (const l of say(/writes? (database )?rows?|row writes/)) expect(l, l).toMatch(/Postgres/);
+  for (const l of say(/\bwrites? (only )?to Postgres/)) expect(l, l).toMatch(/database rows?|row writes/);
+  // which data a job read: crew says so, or says it is not known; never a guessed history
+  for (const l of say(/which data/)) expect(l, l).toMatch(/not known/);
+  // the Apps page draws no numbers until an app is opened
+  for (const l of say(/Apps page/)) expect(l, l).not.toMatch(/headline numbers|live numbers/);
+});
