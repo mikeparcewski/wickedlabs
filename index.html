@@ -50,6 +50,9 @@ SCRME+RVUodVkVYcmjKVjx17nxDakheOiq4roFgEplM7Ohn92egaHe5VJCtP4/fJgi2pMEgCAK1K1H5N
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-padding-top:var(--header-h);-webkit-text-size-adjust:100%}
+/* The page never follows content that swaps: the follow-a-job panel changes inside a box of fixed height, so scroll
+   anchoring has nothing to correct, and any interactive added later can never pull the page back to itself. */
+html{overflow-anchor:none}
 body{margin:0;background:var(--surface-base);color:var(--ink-body);font:400 15px/1.55 var(--font-sans);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{color:var(--ink-high);font-weight:600;margin:0;letter-spacing:-0.01em;text-wrap:balance}
 p{margin:0}
@@ -1125,9 +1128,16 @@ function placeToken(){if(window.__hy)__hy($('map'));$('cap').setAttribute('data-
  $('trailp').setAttribute('d',pathOf(pts));$('ghost').setAttribute('d',pathOf(all));
  var t=$('token'),p=pts[pts.length-1];if(p){t.style.left=p[0]+'px';t.style.top=(p[1]-(window.innerWidth<=1279?17:26))+'px';}
 }
-var io=null;
+var io=null,fio=null;
+/* the follow-a-job panel moves only with the reader, and a glide it started (the token, the stepper) lands at
+   once when the panel is under a quarter on screen or the tab is hidden: nothing plays on where nobody looks */
+function settleFollow(){var f=$('follow');if(!f||!f.getAnimations)return;f.getAnimations({subtree:true}).forEach(function(a){var t=a.effect&&a.effect.getComputedTiming?a.effect.getComputedTiming():null;if(t&&t.endTime!==Infinity&&a.playState==='running'){try{a.finish();}catch(e){}}});}
+document.addEventListener('visibilitychange',function(){if(document.hidden){settleFollow();requestAnimationFrame(settleFollow);}});
 function observe(){
  if(io)io.disconnect();
+ if(fio)fio.disconnect();
+ var f=$('follow'),steps=[];for(var k=0;k<=100;k++)steps.push(k/100);
+ if(f){fio=new IntersectionObserver(function(es){var e=es[es.length-1],share=Math.max(e.intersectionRatio,e.intersectionRect.height/Math.max(1,innerHeight));if(!e.isIntersecting||share<0.25){settleFollow();requestAnimationFrame(settleFollow);}},{threshold:steps});fio.observe(f);}
  io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var k=+e.target.getAttribute('data-i');if(k!==S.i){S.i=k;renderStage();try{history.replaceState(null,'','#step-'+(k+1));}catch(x){}}}});},{rootMargin:'-45% 0px -45% 0px',threshold:0});
  document.querySelectorAll('.slide').forEach(function(s){io.observe(s);});
 }
