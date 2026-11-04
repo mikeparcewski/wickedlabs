@@ -197,7 +197,7 @@
   {
    "id": "D1",
    "component": "crew",
-   "line": "Agents read a live data source only through one gate: read-only SQL checked before it runs, a 10-second deadline, at most 200 rows and 64 KB, and every result marked untrusted and cited.",
+   "line": "Agents read a database only through one gate (an API or MCP server’s tools reach them as MCP tools, under your approvals): read-only SQL checked before it runs, a 10-second deadline, at most 200 rows and 64 KB, and every result marked untrusted and cited.",
    "status": "released"
   },
   {
