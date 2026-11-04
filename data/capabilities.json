@@ -83,7 +83,7 @@
   {
    "id": "K4",
    "component": "studio",
-   "line": "Ask a question of the data: an agent drafts one read-only query and says what it does, and nothing runs until you confirm it.",
+   "line": "Ask a question of a SQL source’s data (Postgres, MySQL or a SQLite upload): an agent drafts one read-only query and says what it does, and nothing runs until you confirm it.",
    "status": "released"
   },
   {

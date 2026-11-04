@@ -82,9 +82,20 @@ test('release claims keep their qualifiers (release-1104 review): the Agents box
   const say = (re: RegExp) => lines.filter((l) => re.test(l));
   // the Agents box is on saved SQL sources, and agents query rows only on Postgres
   for (const l of say(/Agents box on/)) { expect(l, l).toMatch(/saved SQL source/); expect(l, l).toMatch(/Postgres/); }
-  // an app's writes: database rows go to Postgres only; API actions exist too, and every action waits for a person
-  for (const l of say(/writes? (database )?rows?|row writes/)) expect(l, l).toMatch(/Postgres/);
-  for (const l of say(/\bwrites? (only )?to Postgres/)) expect(l, l).toMatch(/database rows?|row writes/);
+  // an app's writes: database rows go to Postgres only, with Allow writes on; API actions exist too; every action
+  // waits for a person. Any line that pairs writing with Postgres must say rows (whatever its case or wording) ...
+  for (const l of say(/Postgres/)) if (/writ/i.test(l)) { expect(l, l).toMatch(/database rows?|row writes/i); expect(l, l).toMatch(/Allow writes/); }
+  // ... and the lines that describe app actions name both kinds and the person's confirmation
+  const crew = COMP.find((c: any) => c.id === 'crew'), studio = COMP.find((c: any) => c.id === 'studio');
+  const row = (id: string) => (ROWS.find((r: any) => r[0] === id) || [])[2] as string;
+  for (const l of [row('D5'), crew.news[1]]) {
+    expect(l, 'an app action line').toMatch(/call an API or write (one|a) database row/);
+    expect(l, l).toMatch(/only when a person confirms/);
+  }
+  expect(studio.news[1]).toMatch(/actions run only when you confirm them/);
+  expect(row('K3')).toMatch(/writes database rows only to Postgres, with Allow writes on/);
+  // Ask is for SQL sources only (GraphQL keeps Test call)
+  for (const l of say(/Ask a question/)) if (l.length > 90) expect(l, l).toMatch(/SQL source/);
   // which data a job read: crew says so, or says it is not known; never a guessed history
   for (const l of say(/which data/)) expect(l, l).toMatch(/not known/);
   // the Apps page draws no numbers until an app is opened
