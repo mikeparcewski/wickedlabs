@@ -154,13 +154,12 @@ test('the components and releases show today\'s releases, each linked to its CHA
     'Report shows up to four of your apps as dashboards; trackers link to projects',
   ]);
   // the four components shipped together, on one day
-  expect(await page.locator('#changes .tli .tld').allTextContents()).toEqual(['Nov 4', 'Nov 4', 'Nov 4', 'Nov 4']);
-  // what is not built yet says so, and names nothing this release ships
-  const soon = page.locator('#changes .soon2');
-  await expect(soon).toHaveText('Coming soon: GitLab and Azure DevOps trackers, more databases (SQL Server, Oracle, Snowflake and BigQuery), and Report’s own figures as a data source for your apps.');
+  expect(await page.locator('#changes .tli .tld').allTextContents()).toEqual(['Nov 5', 'Nov 5', 'Nov 5', 'Nov 5']);
+  // nothing is labelled by a future release (operator rule, 2026-11-05)
+  expect((await page.content()).toLowerCase()).not.toContain('coming soon');
   // under the hood, in the parts view: core-ts and interactive at today's tags
   await page.goto('/#parts', { waitUntil: 'networkidle' });
-  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.24');
+  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.28');
   await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.15.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
