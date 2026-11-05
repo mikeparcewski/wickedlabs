@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = normalize(process.env.SMOKE_ROOT ?? join(fileURLToPath(new URL('.', import.meta.url)), '..'));
 const PORT = Number(process.env.SMOKE_PORT ?? 4377);
-const TYPES = { '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.css': 'text/css', '.js': 'text/javascript', '.txt': 'text/plain; charset=utf-8' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.css': 'text/css', '.js': 'text/javascript', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json; charset=utf-8' };
 
 createServer(async (req, res) => {
   let file;

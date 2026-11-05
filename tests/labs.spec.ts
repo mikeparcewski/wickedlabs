@@ -10,14 +10,15 @@ const VIEWPORTS = [
   { width: 390, height: 844 },
 ];
 
-// today's published releases (npm view, 2026-11-03), as the page must show them
+// the release the page describes (release-1104: studio 0.15.0, crew 0.17.0, garden 12.64.0, estate 0.32.0), as it
+// must show them; OLD are the releases before it, which must be gone from the page
 const CURRENT = [
-  { repo: 'wicked-studio', ver: '0.14.1', tag: 'v0.14.1' },
-  { repo: 'wicked-crew', ver: '0.16.13', tag: 'v0.16.13' },
-  { repo: 'wicked-garden', ver: '12.63.0', tag: 'v12.63.0' },
-  { repo: 'wicked-estate', ver: '0.31.0', tag: 'v0.31.0' },
+  { repo: 'wicked-studio', ver: '0.15.0', tag: 'v0.15.0' },
+  { repo: 'wicked-crew', ver: '0.17.0', tag: 'v0.17.0' },
+  { repo: 'wicked-garden', ver: '12.64.0', tag: 'v12.64.0' },
+  { repo: 'wicked-estate', ver: '0.32.0', tag: 'v0.32.0' },
 ];
-const OLD = ['0.16.12', '12.62.0', '0.15.20', 'v0.14.0'];
+const OLD = ['0.14.1', '0.16.13', '12.63.0', '0.31.0', '0.15.21', '0.15.24', '30 standard MCP tools'];
 
 function watch(page: Page, baseURL: string) {
   const errors: string[] = [];
@@ -146,13 +147,19 @@ test('the components and releases show today\'s releases, each linked to its CHA
     await expect(item.locator('.ver')).toHaveText(c.ver);
     await expect(item.locator('a.more')).toHaveAttribute('href', `https://github.com/mikeparcewski/${c.repo}/blob/${c.tag}/CHANGELOG.md`);
   }
-  // studio 0.14.1 changed nothing a user sees, and the page says so instead of inventing a line
-  await expect(page.locator('#changes .tli', { hasText: 'wicked-studio' }).locator('li')).toHaveText(['No UI or behaviour change since 0.14.0: a patch for the package’s own words']);
-  // the three Nov 3 releases come first, newest release first
-  expect(await page.locator('#changes .tli .tld').allTextContents()).toEqual(['Nov 3', 'Nov 3', 'Nov 3', 'Oct 25']);
+  // studio 0.15.0 leads with Apps, its data sources and Report's dashboards (up to three lines per component)
+  await expect(page.locator('#changes .tli', { hasText: 'wicked-studio' }).locator('li')).toHaveText([
+    'Apps, under Work: build a live app or dashboard over your data in a chat',
+    'Data sources: Test connection, Ask a question of the data, and the Agents box',
+    'Report shows up to four of your apps as dashboards; trackers link to projects',
+  ]);
+  // the four components shipped together, on one day
+  expect(await page.locator('#changes .tli .tld').allTextContents()).toEqual(['Nov 5', 'Nov 5', 'Nov 5', 'Nov 5']);
+  // nothing is labelled by a future release (operator rule, 2026-11-05)
+  expect((await page.content()).toLowerCase()).not.toContain('coming soon');
   // under the hood, in the parts view: core-ts and interactive at today's tags
   await page.goto('/#parts', { waitUntil: 'networkidle' });
-  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.21');
+  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.28');
   await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.15.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
