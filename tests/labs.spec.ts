@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 // Smoke for wickedlabs.ai: the approved lab design (DES-SITES-V2 rev 10.2-final) served as the page, with the
 // operator's 2026-11-03 fixes (the lab's background art, no section links in the header, the family footer) and
@@ -178,8 +179,8 @@ test('production settings: the title, no design notes or mockup wording, and med
 // rev 11 (the operator, 2026-11-05): "break out bits into its own section", "remove the releases component and replace
 // with a workflows component", "the start on your machine can be added below"; then: every workflow, no release labels,
 // an interactive section.
-const VERBS = ['Plan', 'Build', 'Test', 'Investigate', 'Analyze', 'Judge', 'Create', 'Estimate', 'Organize', 'Improve'];
-const COUNTS = [1, 7, 3, 5, 3, 5, 6, 2, 2, 5];
+type Card = { verb: string; id: string; title: string; command: string; delivers: string; gate: string[]; options: { title: string; command: string }[] };
+const CATALOG: { verbs: { id: string; title: string }[]; cards: Card[] } = JSON.parse(readFileSync(new URL('./fixtures/catalog-v2.json', import.meta.url), 'utf8'));
 const RELEASE_WORDS = /coming soon|coming in|not yet|\b1\.[012]\b|deferred|in progress|\bsoon\b/i;
 
 test('bits is its own section, after the components; the components section carries no bits card', async ({ page }) => {
@@ -194,41 +195,55 @@ test('bits is its own section, after the components; the components section carr
   expect(order).toEqual(['components', 'bits', 'workflows', 'start']);
 });
 
-test('the workflows: ten verbs in the catalog\'s order, every workflow with its command, and no release labels', async ({ page }) => {
+test('the workflows: every verb, workflow and option of the catalog, with its command, and no release labels', async ({ page }) => {
+  // the expected list is the catalog's (tests/fixtures/catalog-v2.json), not the page's own data
+  const GET: Record<string, string> = { pr: 'A pull request', report: 'A report', document: 'A document in studio', video: 'A video', proposals: 'Proposals you approve' };
+  const GATE: Record<string, string> = { 'qe-acceptance': 'QE acceptance', parity: 'Parity', 'cited-findings': 'Cited findings', 'fidelity-to-source': 'Fidelity to source',
+    'evidence-floor': 'Evidence floor', 'proposal-only': 'Proposal only', 'draft-floor': 'Draft floor', walkthrough: 'Walkthrough review',
+    'traces-to-requirements': 'Traces to requirements', pick: 'Your pick' };
+  expect(CATALOG.cards.length).toBe(39);
+  expect(CATALOG.cards.filter((c) => c.options.length).length).toBeGreaterThan(10);
   await page.goto('/', { waitUntil: 'networkidle' });
   const tabs = page.locator('#workflows [role="tablist"] [role="tab"]');
-  await expect(tabs).toHaveCount(10);
-  expect((await tabs.allTextContents()).map((t) => t.replace(/\d+$/, ''))).toEqual(VERBS);
+  expect((await tabs.allTextContents()).map((t) => t.replace(/\d+$/, ''))).toEqual(CATALOG.verbs.map((v) => v.title));
   // it opens on Build
   await expect(page.locator('#wft-build')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#releases, #changes .tli, .soon2')).toHaveCount(0);
-  const seen = new Set<string>();
-  for (let i = 0; i < VERBS.length; i++) {
-    await tabs.nth(i).click();
-    await expect(tabs.nth(i)).toHaveAttribute('aria-selected', 'true');
-    await expect(page.locator('#wfPanel')).toHaveAttribute('aria-labelledby', await tabs.nth(i).getAttribute('id') as string);
+  for (const v of CATALOG.verbs) {
+    const want = CATALOG.cards.filter((c) => c.verb === v.id);
+    await page.locator(`#wft-${v.id}`).click();
+    await expect(page.locator(`#wft-${v.id}`)).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator(`#wft-${v.id} .n`)).toHaveText(String(want.length));
+    await expect(page.locator('#wfPanel')).toHaveAttribute('aria-labelledby', `wft-${v.id}`);
     const cards = page.locator('#wfPanel [data-wfcard]');
-    await expect(cards).toHaveCount(COUNTS[i]);
-    for (let k = 0; k < COUNTS[i]; k++) {
-      const b = cards.nth(k);
-      await b.click();
-      await expect(b).toHaveAttribute('aria-expanded', 'true');
-      const title = (await b.locator('span').first().textContent())!;
-      const cmd = (await b.locator('code').textContent())!;
-      expect(cmd).toMatch(/^\/[a-z-]+$/);
+    expect(await cards.evaluateAll((bs) => bs.map((b) => [b.querySelector('span')!.textContent, b.querySelector('code')!.textContent])))
+      .toEqual(want.map((c) => [c.title, c.command]));
+    for (const c of want) {
+      await page.locator(`[data-wfcard="${c.id}"]`).click();
+      await expect(page.locator(`[data-wfcard="${c.id}"]`)).toHaveAttribute('aria-expanded', 'true');
       const d = page.locator('#wfDetail');
-      await expect(d.locator('h3')).toHaveText(title);
-      await expect(d.locator('.wfcmd')).toHaveText(cmd);
+      await expect(d.locator('h3')).toHaveText(c.title);
+      await expect(d.locator('.wfcmd')).toHaveText(c.command);
       await expect(d.locator('dt').first()).toHaveText('You get');
-      const text = await d.innerText();
-      expect(text, `${title}: no release label`).not.toMatch(RELEASE_WORDS);
-      // every option names its own command, under the card's
-      for (const oc of await d.locator('.wfopts code').allTextContents()) expect(oc.startsWith(cmd + ' ')).toBe(true);
-      seen.add(cmd);
+      await expect(d.locator('dd').first()).toHaveText(GET[c.delivers]);
+      expect(await d.locator('dd ul b').allTextContents(), `${c.title}: its checks`).toEqual(c.gate.map((g) => GATE[g]));
+      expect(await d.locator('.wfopts li .t').allTextContents(), `${c.title}: its options`).toEqual(c.options.map((o) => o.title));
+      expect(await d.locator('.wfopts li code').allTextContents(), `${c.title}: each option's command`).toEqual(c.options.map((o) => o.command));
+      expect(await d.innerText(), `${c.title}: no release label`).not.toMatch(RELEASE_WORDS);
     }
   }
-  expect(seen.size).toBe(39);
   expect(await page.locator('#workflows').innerText()).not.toMatch(RELEASE_WORDS);
+});
+
+test('an option that starts from something else, or is checked differently, says so', async ({ page }) => {
+  await page.goto('/#workflows', { waitUntil: 'networkidle' });
+  await page.locator('#wft-create').click();
+  await page.locator('[data-wfcard="document"]').click();
+  const repo = page.locator('#wfDetail .wfopts li', { hasText: 'Docs in the repo' });
+  await expect(repo.locator('.s.x')).toHaveText('You get a pull request · starts from a repository · checked by fidelity to source · a different agent from the one that did the work checks it');
+  await page.locator('#wft-analyze').click();
+  await page.locator('[data-wfcard="analyze-codebase"]').click();
+  await expect(page.locator('#wfDetail .wfopts li', { hasText: 'Domain' }).locator('.s.x')).toHaveText('starts from a repository, a project');
 });
 
 test('the verb tabs work from the keyboard: arrows, Home and End move the selection and the focus; a workflow opens with Enter', async ({ page }) => {
@@ -292,6 +307,7 @@ test('each start command has its own Copy button', async ({ page, context }) => 
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/#start', { waitUntil: 'networkidle' });
   for (const [k, cmd] of [['1', 'npx wicked-installer'], ['2', 'npx wicked-crew serve']]) {
+    await expect(page.locator(`[data-copy="${k}"]`)).toHaveAccessibleName(`Copy ${cmd}`);
     await page.locator(`[data-copy="${k}"]`).click();
     await expect(page.locator(`#labCopyMsg${k}`)).toHaveText(`Copied ${cmd} to the clipboard.`);
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(cmd);
