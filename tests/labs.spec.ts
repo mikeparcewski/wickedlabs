@@ -32,7 +32,7 @@ function watch(page: Page, baseURL: string) {
 }
 
 for (const vp of VIEWPORTS) {
-  test(`renders at ${vp.width}x${vp.height}: hero, follow a job, components, releases; no errors, sideways scroll or remote requests`, async ({ page, baseURL }) => {
+  test(`renders at ${vp.width}x${vp.height}: hero, follow a job, components, bits, workflows, start; no errors, sideways scroll or remote requests`, async ({ page, baseURL }) => {
     const w = watch(page, baseURL!);
     await page.setViewportSize(vp);
     await page.goto('/', { waitUntil: 'networkidle' });
@@ -41,7 +41,9 @@ for (const vp of VIEWPORTS) {
     await expect(page.locator('#follow .slide')).toHaveCount(6);
     await expect(page.locator('#chooseH')).toHaveText('Follow one job');
     await expect(page.locator('#components h2')).toHaveText('The components and their parts');
-    await expect(page.locator('#changes h2')).toHaveText('The latest releases');
+    await expect(page.locator('#bits h2')).toHaveText('Bits');
+    await expect(page.locator('#workflows h2')).toHaveText('The workflows');
+    await expect(page.locator('#start h2')).toHaveText('Start on your machine');
     // the follow-a-job controls are the page's own navigation and stay
     await expect(page.locator('.hero a[href="#step-1"]')).toHaveCount(1);
     await expect(page.locator('[data-case]')).toHaveCount(3);
@@ -139,22 +141,11 @@ test('without color-mix() the sticky header keeps a solid background (the mixed 
   expect(html).toMatch(/\.hdr\{[^}]*background:var\(--surface-base\);background:color-mix\(in srgb,var\(--surface-base\) 88%,transparent\)/);
 });
 
-test('the components and releases show today\'s releases, each linked to its CHANGELOG at the tag', async ({ page, request }) => {
+test('the components show today\'s releases', async ({ page, request }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
   for (const c of CURRENT) {
     await expect(page.locator(`#components a.pcard2[href="#/${c.repo.replace('wicked-', '')}"] .ver`)).toHaveText(c.ver);
-    const item = page.locator('#changes .tli', { has: page.locator(`h3 a[href="#/${c.repo.replace('wicked-', '')}"]`) });
-    await expect(item.locator('.ver')).toHaveText(c.ver);
-    await expect(item.locator('a.more')).toHaveAttribute('href', `https://github.com/mikeparcewski/${c.repo}/blob/${c.tag}/CHANGELOG.md`);
   }
-  // studio 0.15.0 leads with Apps, its data sources and Report's dashboards (up to three lines per component)
-  await expect(page.locator('#changes .tli', { hasText: 'wicked-studio' }).locator('li')).toHaveText([
-    'Apps, under Work: build a live app or dashboard over your data in a chat',
-    'Data sources: Test connection, Ask a question of the data, and the Agents box',
-    'Report shows up to four of your apps as dashboards; trackers link to projects',
-  ]);
-  // the four components shipped together, on one day
-  expect(await page.locator('#changes .tli .tld').allTextContents()).toEqual(['Nov 5', 'Nov 5', 'Nov 5', 'Nov 5']);
   // nothing is labelled by a future release (operator rule, 2026-11-05)
   expect((await page.content()).toLowerCase()).not.toContain('coming soon');
   // under the hood, in the parts view: core-ts and interactive at today's tags
@@ -182,4 +173,135 @@ test('production settings: the title, no design notes or mockup wording, and med
   expect(await page.locator('#parts').innerText()).not.toMatch(WORDING);
   const html = await (await request.get('/')).text();
   expect(html.match(/@media[^{]*\(\s*(width|height)\s*[<>]/g) ?? []).toEqual([]);
+});
+
+// rev 11 (the operator, 2026-11-05): "break out bits into its own section", "remove the releases component and replace
+// with a workflows component", "the start on your machine can be added below"; then: every workflow, no release labels,
+// an interactive section.
+const VERBS = ['Plan', 'Build', 'Test', 'Investigate', 'Analyze', 'Judge', 'Create', 'Estimate', 'Organize', 'Improve'];
+const COUNTS = [1, 7, 3, 5, 3, 5, 6, 2, 2, 5];
+const RELEASE_WORDS = /coming soon|coming in|not yet|\b1\.[012]\b|deferred|in progress|\bsoon\b/i;
+
+test('bits is its own section, after the components; the components section carries no bits card', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await expect(page.locator('#components .bitc, #components a[href*="bits.wickedagile.com"]')).toHaveCount(0);
+  const card = page.locator('#bits a.pcard2.bitc');
+  await expect(card).toHaveCount(1);
+  await expect(card).toHaveAttribute('href', 'https://bits.wickedagile.com/the-work-factory/');
+  await expect(card.locator('.nm')).toHaveText('The Work: the one-shift factory');
+  await expect(page.locator('#bits a.bitsall')).toHaveAttribute('href', 'https://bits.wickedagile.com/');
+  const order = await page.evaluate(() => [...document.querySelectorAll('main > section')].map((x) => x.id).filter((id) => ['components', 'bits', 'workflows', 'start'].includes(id)));
+  expect(order).toEqual(['components', 'bits', 'workflows', 'start']);
+});
+
+test('the workflows: ten verbs in the catalog\'s order, every workflow with its command, and no release labels', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  const tabs = page.locator('#workflows [role="tablist"] [role="tab"]');
+  await expect(tabs).toHaveCount(10);
+  expect((await tabs.allTextContents()).map((t) => t.replace(/\d+$/, ''))).toEqual(VERBS);
+  // it opens on Build
+  await expect(page.locator('#wft-build')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#releases, #changes .tli, .soon2')).toHaveCount(0);
+  const seen = new Set<string>();
+  for (let i = 0; i < VERBS.length; i++) {
+    await tabs.nth(i).click();
+    await expect(tabs.nth(i)).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('#wfPanel')).toHaveAttribute('aria-labelledby', await tabs.nth(i).getAttribute('id') as string);
+    const cards = page.locator('#wfPanel [data-wfcard]');
+    await expect(cards).toHaveCount(COUNTS[i]);
+    for (let k = 0; k < COUNTS[i]; k++) {
+      const b = cards.nth(k);
+      await b.click();
+      await expect(b).toHaveAttribute('aria-expanded', 'true');
+      const title = (await b.locator('span').first().textContent())!;
+      const cmd = (await b.locator('code').textContent())!;
+      expect(cmd).toMatch(/^\/[a-z-]+$/);
+      const d = page.locator('#wfDetail');
+      await expect(d.locator('h3')).toHaveText(title);
+      await expect(d.locator('.wfcmd')).toHaveText(cmd);
+      await expect(d.locator('dt').first()).toHaveText('You get');
+      const text = await d.innerText();
+      expect(text, `${title}: no release label`).not.toMatch(RELEASE_WORDS);
+      // every option names its own command, under the card's
+      for (const oc of await d.locator('.wfopts code').allTextContents()) expect(oc.startsWith(cmd + ' ')).toBe(true);
+      seen.add(cmd);
+    }
+  }
+  expect(seen.size).toBe(39);
+  expect(await page.locator('#workflows').innerText()).not.toMatch(RELEASE_WORDS);
+});
+
+test('the verb tabs work from the keyboard: arrows, Home and End move the selection and the focus; a workflow opens with Enter', async ({ page }) => {
+  await page.goto('/#workflows', { waitUntil: 'networkidle' });
+  await page.locator('#wft-build').focus();
+  const sel = () => page.locator('#workflows [role="tab"][aria-selected="true"]').getAttribute('id');
+  const foc = () => page.evaluate(() => document.activeElement!.id);
+  await page.keyboard.press('ArrowRight');
+  expect([await sel(), await foc()]).toEqual(['wft-test', 'wft-test']);
+  await page.keyboard.press('ArrowLeft'); await page.keyboard.press('ArrowLeft');
+  expect([await sel(), await foc()]).toEqual(['wft-plan', 'wft-plan']);
+  await page.keyboard.press('ArrowLeft');
+  expect(await sel()).toBe('wft-improve');
+  await page.keyboard.press('Home');
+  expect(await sel()).toBe('wft-plan');
+  await page.keyboard.press('End');
+  expect(await sel()).toBe('wft-improve');
+  // one tab stop for the tablist (roving tabindex)
+  expect(await page.locator('#workflows [role="tab"][tabindex="0"]').count()).toBe(1);
+  // Tab leaves the tablist for the workflows; Enter on one opens it and keeps the focus there
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  expect(await page.evaluate(() => document.activeElement!.getAttribute('data-wfcard'))).toBe('review-recent-work');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-wfcard="review-recent-work"]')).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#wfDetail h3')).toHaveText('Review recent work');
+  expect(await page.evaluate(() => document.activeElement!.getAttribute('data-wfcard'))).toBe('review-recent-work');
+});
+
+test('the detail sits beside the list on a laptop and opens under the picked workflow on a phone', async ({ page }) => {
+  for (const vp of [{ width: 1440, height: 700 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(vp);
+    await page.goto('/#workflows', { waitUntil: 'networkidle' });
+    await page.locator('[data-wfcard="migrate"]').click();
+    const where = await page.evaluate(() => { const d = document.getElementById('wfDetail')!; return { inList: !!d.closest('.wflist'), prev: d.previousElementSibling?.getAttribute('data-wfcard') ?? null }; });
+    if (vp.width === 390) expect(where).toEqual({ inList: true, prev: 'migrate' });
+    else expect(where.inList).toBe(false);
+    const b = await page.locator('[data-wfcard="migrate"]').boundingBox();
+    const d = await page.locator('#wfDetail').boundingBox();
+    if (vp.width === 390) expect(d!.y).toBeGreaterThanOrEqual(b!.y + b!.height);
+    else expect(d!.x).toBeGreaterThan(b!.x + b!.width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+  }
+});
+
+test('inbound links keep working: #changes lands on the workflows, #start on the start command, below the workflows', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 700 });
+  for (const [hash, id] of [['#changes', 'workflows'], ['#workflows', 'workflows'], ['#start', 'start'], ['#bits', 'bits']]) {
+    await page.goto('/' + hash, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(300);
+    const top = await page.locator('#' + id).evaluate((el) => el.getBoundingClientRect().top);
+    expect(Math.abs(top), `${hash} lands on #${id}`).toBeLessThan(120);
+  }
+  const wf = await page.locator('#workflows').boundingBox();
+  const st = await page.locator('#start').boundingBox();
+  expect(st!.y).toBeGreaterThanOrEqual(wf!.y + wf!.height - 1);
+  await expect(page.locator('#start code')).toHaveText(['npx wicked-installer', 'npx wicked-crew serve']);
+});
+
+test('each start command has its own Copy button', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/#start', { waitUntil: 'networkidle' });
+  for (const [k, cmd] of [['1', 'npx wicked-installer'], ['2', 'npx wicked-crew serve']]) {
+    await page.locator(`[data-copy="${k}"]`).click();
+    await expect(page.locator(`#labCopyMsg${k}`)).toHaveText(`Copied ${cmd} to the clipboard.`);
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(cmd);
+  }
+});
+
+test('the footer\'s "wicked good." is bigger: 60 px on a laptop, 40 px on a phone (the operator, 2026-11-05)', async ({ page }) => {
+  for (const [vp, px] of [[{ width: 1440, height: 700 }, '60px'], [{ width: 390, height: 844 }, '40px']] as const) {
+    await page.setViewportSize(vp);
+    await page.goto('/', { waitUntil: 'networkidle' });
+    expect(await page.locator('.fam-ft .footer-title').evaluate((el) => getComputedStyle(el).fontSize)).toBe(px);
+  }
 });
