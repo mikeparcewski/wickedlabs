@@ -18,7 +18,7 @@ const CURRENT = [
   { repo: 'wicked-garden', ver: '12.64.0', tag: 'v12.64.0' },
   { repo: 'wicked-estate', ver: '0.32.0', tag: 'v0.32.0' },
 ];
-const OLD = ['0.14.1', '0.16.13', '12.63.0', '0.31.0', '0.15.21', '30 standard MCP tools'];
+const OLD = ['0.14.1', '0.16.13', '12.63.0', '0.31.0', '0.15.21', '0.15.24', '30 standard MCP tools'];
 
 function watch(page: Page, baseURL: string) {
   const errors: string[] = [];
