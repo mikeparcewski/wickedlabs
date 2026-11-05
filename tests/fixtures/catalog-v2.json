@@ -1,0 +1,634 @@
+{
+ "$comment": "From DES-CATALOG-002 rev 5 (design/catalog-v2/cards.json), every card with a slash command. Coming cards carry no delivers there; theirs are from the DES card table (§3.1).",
+ "verbs": [
+  {
+   "id": "plan",
+   "title": "Plan"
+  },
+  {
+   "id": "build",
+   "title": "Build"
+  },
+  {
+   "id": "test",
+   "title": "Test"
+  },
+  {
+   "id": "investigate",
+   "title": "Investigate"
+  },
+  {
+   "id": "analyze",
+   "title": "Analyze"
+  },
+  {
+   "id": "judge",
+   "title": "Judge"
+  },
+  {
+   "id": "create",
+   "title": "Create"
+  },
+  {
+   "id": "estimate",
+   "title": "Estimate"
+  },
+  {
+   "id": "organize",
+   "title": "Organize"
+  },
+  {
+   "id": "improve",
+   "title": "Improve"
+  }
+ ],
+ "cards": [
+  {
+   "verb": "plan",
+   "id": "plan-it",
+   "title": "Plan it",
+   "command": "/plan-it",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "build",
+   "id": "feature",
+   "title": "Build a feature",
+   "command": "/feature",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance"
+   ],
+   "options": []
+  },
+  {
+   "verb": "build",
+   "id": "bug",
+   "title": "Fix a bug",
+   "command": "/bug",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance"
+   ],
+   "options": []
+  },
+  {
+   "verb": "build",
+   "id": "migrate",
+   "title": "Migrate or modernize",
+   "command": "/migrate",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance",
+    "parity"
+   ],
+   "options": [
+    {
+     "title": "Move",
+     "command": "/migrate move"
+    },
+    {
+     "title": "In place",
+     "command": "/migrate in-place"
+    },
+    {
+     "title": "Upgrade",
+     "command": "/migrate upgrade"
+    }
+   ]
+  },
+  {
+   "verb": "build",
+   "id": "refactor",
+   "title": "Refactor or polish",
+   "command": "/refactor",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance",
+    "parity"
+   ],
+   "options": [
+    {
+     "title": "Refactor",
+     "command": "/refactor refactor"
+    },
+    {
+     "title": "Polish",
+     "command": "/refactor polish"
+    }
+   ]
+  },
+  {
+   "verb": "build",
+   "id": "release",
+   "title": "Prepare a release",
+   "command": "/release",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance",
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "build",
+   "id": "start-new",
+   "title": "Start something new",
+   "command": "/new",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance"
+   ],
+   "options": [
+    {
+     "title": "CLI",
+     "command": "/new cli"
+    },
+    {
+     "title": "Service",
+     "command": "/new service"
+    },
+    {
+     "title": "Library",
+     "command": "/new library"
+    },
+    {
+     "title": "MCP server",
+     "command": "/new mcp"
+    }
+   ]
+  },
+  {
+   "verb": "build",
+   "id": "studio-plugin",
+   "title": "Studio plugin",
+   "command": "/plugin",
+   "delivers": "pr",
+   "gate": [
+    "qe-acceptance"
+   ],
+   "options": [
+    {
+     "title": "Editor",
+     "command": "/plugin editor"
+    },
+    {
+     "title": "Phase",
+     "command": "/plugin phase"
+    }
+   ]
+  },
+  {
+   "verb": "test",
+   "id": "plan-tests",
+   "title": "Plan tests",
+   "command": "/plan-tests",
+   "delivers": "pr",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "test",
+   "id": "write-tests",
+   "title": "Write and run tests",
+   "command": "/write-tests",
+   "delivers": "pr",
+   "gate": [
+    "evidence-floor"
+   ],
+   "options": []
+  },
+  {
+   "verb": "test",
+   "id": "suite-health",
+   "title": "Keep the suite healthy",
+   "command": "/suite-health",
+   "delivers": "pr",
+   "gate": [
+    "cited-findings",
+    "evidence-floor"
+   ],
+   "options": [
+    {
+     "title": "Flaky",
+     "command": "/suite-health flaky"
+    },
+    {
+     "title": "Weak",
+     "command": "/suite-health weak"
+    },
+    {
+     "title": "Snapshots",
+     "command": "/suite-health snapshots"
+    },
+    {
+     "title": "Slow",
+     "command": "/suite-health slow"
+    }
+   ]
+  },
+  {
+   "verb": "investigate",
+   "id": "incident",
+   "title": "Incident or root cause",
+   "command": "/incident",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "investigate",
+   "id": "competitive",
+   "title": "Competitive or market analysis",
+   "command": "/competitive",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "investigate",
+   "id": "due-diligence",
+   "title": "Due diligence",
+   "command": "/due-diligence",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "investigate",
+   "id": "research",
+   "title": "Research a question",
+   "command": "/find-out",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "investigate",
+   "id": "reconstruct",
+   "title": "Reconstruct what happened",
+   "command": "/reconstruct",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "analyze",
+   "id": "analyze-codebase",
+   "title": "Analyze a codebase",
+   "command": "/analyze",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": [
+    {
+     "title": "How it works",
+     "command": "/analyze overview"
+    },
+    {
+     "title": "Domain",
+     "command": "/analyze domain"
+    },
+    {
+     "title": "Docs vs code",
+     "command": "/analyze docs"
+    }
+   ]
+  },
+  {
+   "verb": "analyze",
+   "id": "map-requirements",
+   "title": "Map requirements",
+   "command": "/requirements",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "analyze",
+   "id": "analyze-documents",
+   "title": "Analyze documents",
+   "command": "/analyze-docs",
+   "delivers": "report",
+   "gate": [
+    "cited-findings",
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "judge",
+   "id": "review-change",
+   "title": "Review a change",
+   "command": "/review-change",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "judge",
+   "id": "critique",
+   "title": "Critique a document, proposal or claim",
+   "command": "/critique-doc",
+   "delivers": "report",
+   "gate": [
+    "cited-findings",
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "judge",
+   "id": "risk",
+   "title": "Risk analysis",
+   "command": "/risk",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": []
+  },
+  {
+   "verb": "judge",
+   "id": "security",
+   "title": "Security and compliance review",
+   "command": "/audit",
+   "delivers": "report",
+   "gate": [
+    "cited-findings"
+   ],
+   "options": [
+    {
+     "title": "Security",
+     "command": "/audit security"
+    },
+    {
+     "title": "Privacy",
+     "command": "/audit privacy"
+    },
+    {
+     "title": "Compliance",
+     "command": "/audit compliance"
+    }
+   ]
+  },
+  {
+   "verb": "judge",
+   "id": "decide",
+   "title": "Decide (ADR)",
+   "command": "/decide",
+   "delivers": "report",
+   "gate": [
+    "cited-findings",
+    "pick"
+   ],
+   "options": []
+  },
+  {
+   "verb": "create",
+   "id": "document",
+   "title": "Document",
+   "command": "/document",
+   "delivers": "document",
+   "gate": [
+    "draft-floor"
+   ],
+   "options": [
+    {
+     "title": "Document",
+     "command": "/document doc"
+    },
+    {
+     "title": "Presentation",
+     "command": "/document deck"
+    },
+    {
+     "title": "Docs in the repo",
+     "command": "/document repo"
+    }
+   ]
+  },
+  {
+   "verb": "create",
+   "id": "interactive-page",
+   "title": "Interactive page",
+   "command": "/page",
+   "delivers": "document",
+   "gate": [
+    "draft-floor"
+   ],
+   "options": []
+  },
+  {
+   "verb": "create",
+   "id": "demo-video",
+   "title": "Demo video",
+   "command": "/demo",
+   "delivers": "video",
+   "gate": [
+    "walkthrough"
+   ],
+   "options": []
+  },
+  {
+   "verb": "create",
+   "id": "respond",
+   "title": "Respond to an ask",
+   "command": "/respond",
+   "delivers": "document",
+   "gate": [
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "create",
+   "id": "rework",
+   "title": "Rework an artifact",
+   "command": "/rework",
+   "delivers": "document",
+   "gate": [
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "create",
+   "id": "communicate",
+   "title": "Communicate",
+   "command": "/communicate",
+   "delivers": "document",
+   "gate": [
+    "draft-floor"
+   ],
+   "options": [
+    {
+     "title": "Narrative",
+     "command": "/communicate narrative"
+    },
+    {
+     "title": "Meeting prep",
+     "command": "/communicate meeting"
+    },
+    {
+     "title": "Demo script",
+     "command": "/communicate demo-script"
+    },
+    {
+     "title": "Status update",
+     "command": "/communicate status"
+    },
+    {
+     "title": "Message",
+     "command": "/communicate message"
+    }
+   ]
+  },
+  {
+   "verb": "estimate",
+   "id": "estimate-price",
+   "title": "Estimate and price",
+   "command": "/estimate",
+   "delivers": "report",
+   "gate": [
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "estimate",
+   "id": "run-cost",
+   "title": "Model run cost",
+   "command": "/run-cost",
+   "delivers": "report",
+   "gate": [
+    "fidelity-to-source"
+   ],
+   "options": []
+  },
+  {
+   "verb": "organize",
+   "id": "backlog",
+   "title": "Backlog from requirements",
+   "command": "/backlog",
+   "delivers": "document",
+   "gate": [
+    "traces-to-requirements"
+   ],
+   "options": [
+    {
+     "title": "Epics",
+     "command": "/backlog epics"
+    },
+    {
+     "title": "Stories",
+     "command": "/backlog stories"
+    },
+    {
+     "title": "Tasks",
+     "command": "/backlog tasks"
+    }
+   ]
+  },
+  {
+   "verb": "organize",
+   "id": "operating-model",
+   "title": "Roles and operating model",
+   "command": "/roles",
+   "delivers": "document",
+   "gate": [
+    "draft-floor"
+   ],
+   "options": []
+  },
+  {
+   "verb": "improve",
+   "id": "analyze-runs",
+   "title": "Analyze runs",
+   "command": "/evals",
+   "delivers": "report",
+   "gate": [
+    "proposal-only"
+   ],
+   "options": []
+  },
+  {
+   "verb": "improve",
+   "id": "review-recent-work",
+   "title": "Review recent work",
+   "command": "/review-recent",
+   "delivers": "report",
+   "gate": [
+    "proposal-only"
+   ],
+   "options": []
+  },
+  {
+   "verb": "improve",
+   "id": "propose",
+   "title": "Propose rules and memories",
+   "command": "/propose",
+   "delivers": "proposals",
+   "gate": [
+    "proposal-only"
+   ],
+   "options": [
+    {
+     "title": "Rules",
+     "command": "/propose rules"
+    },
+    {
+     "title": "Memories from recent work",
+     "command": "/propose memories"
+    },
+    {
+     "title": "Knowledge on a topic",
+     "command": "/propose knowledge"
+    }
+   ]
+  },
+  {
+   "verb": "improve",
+   "id": "evaluate-rules",
+   "title": "Evaluate rules",
+   "command": "/evaluate-rules",
+   "delivers": "report",
+   "gate": [
+    "proposal-only"
+   ],
+   "options": []
+  },
+  {
+   "verb": "improve",
+   "id": "retro",
+   "title": "Retro",
+   "command": "/retro",
+   "delivers": "proposals",
+   "gate": [
+    "proposal-only"
+   ],
+   "options": []
+  }
+ ]
+}
