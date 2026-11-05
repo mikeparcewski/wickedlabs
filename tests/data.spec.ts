@@ -97,6 +97,8 @@ test('release claims keep their qualifiers (release-1104 review): the Agents box
   // the data gate is the path to a database; an API or MCP server's tools reach agents as MCP tools, not through it
   for (const l of say(/through one gate|data gate for every/)) if (/[Aa]gents? read|agent read/.test(l)) expect(l, l).toMatch(/database/);
   expect(row('D1')).toMatch(/an API or MCP server’s tools reach them as MCP tools/);
+  // tracker actions (a comment, a status change) wait for a person, wherever they are described
+  for (const l of say(/comment on the issue/)) expect(l, l).toMatch(/only when a person confirms/);
   // Ask is for SQL sources only (GraphQL keeps Test call)
   for (const l of say(/Ask a question/)) if (l.length > 90) expect(l, l).toMatch(/SQL source/);
   // which data a job read: crew says so, or says it is not known; never a guessed history

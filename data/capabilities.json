@@ -215,7 +215,7 @@
   {
    "id": "D4",
    "component": "crew",
-   "line": "A job reaches only its project’s and its repositories’ trackers, and its delivery links back to the issue in the tracker’s own form.",
+   "line": "A job reaches only its project’s and its repositories’ trackers, and its delivery links back to the issue in the tracker’s own form; a comment on the issue or a change of its status runs only when a person confirms it.",
    "status": "released"
   },
   {
