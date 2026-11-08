@@ -170,9 +170,12 @@ test('the components show today\'s releases', async ({ page, request }) => {
   for (const c of CURRENT) expect(tags[c.repo.replace('wicked-', '')], c.repo).toBe(c.tag);
   expect(tags.core).toBe('core-ts-v0.15.34');
   expect(tags.interactive).toBe('v0.16.0');
+  // the installer stamps its npm latest (0.9.0), visible in the parts view and in the export's get-started line
+  expect(tags.installer).toBe('v0.9.0');
   await page.goto('/#/studio', { waitUntil: 'networkidle' });
   const hrefs = await page.locator('a[href*="github.com/mikeparcewski/wicked-studio/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-  expect(hrefs.length).toBeGreaterThan(0);
+  expect(hrefs.filter((h) => /\/tree\//.test(h!)).length, 'a GitHub tree link').toBeGreaterThan(0);
+  expect(hrefs.filter((h) => /\/blob\/[^/]+\/CHANGELOG\.md/.test(h!)).length, 'a release-notes link').toBeGreaterThan(0);
   for (const h of hrefs) if (/\/(tree|blob)\//.test(h!)) expect(h).toMatch(/\/(tree|blob)\/v0\.16\.0(\/|$)/);
   expect(html).toContain('github.com/mikeparcewski/wicked-interactive/blob/v0.16.0/CHANGELOG.md');
 });
