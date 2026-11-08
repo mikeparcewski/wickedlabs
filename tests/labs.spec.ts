@@ -12,15 +12,15 @@ const VIEWPORTS = [
   { width: 390, height: 844 },
 ];
 
-// the release the page describes (release-1108: studio 0.16.0, crew 0.18.0, garden 12.66.1, estate 0.32.1), as it
+// the release the page describes (release-1108: studio 0.16.1, crew 0.18.1, garden 12.66.1, estate 0.32.1), as it
 // must show them; OLD are the releases before it, which must be gone from the page
 const CURRENT = [
-  { repo: 'wicked-studio', ver: '0.16.0', tag: 'v0.16.0' },
-  { repo: 'wicked-crew', ver: '0.18.0', tag: 'v0.18.0' },
+  { repo: 'wicked-studio', ver: '0.16.1', tag: 'v0.16.1' },
+  { repo: 'wicked-crew', ver: '0.18.1', tag: 'v0.18.1' },
   { repo: 'wicked-garden', ver: '12.66.1', tag: 'v12.66.1' },
   { repo: 'wicked-estate', ver: '0.32.1', tag: 'v0.32.1' },
 ];
-const OLD = ['0.14.1', '0.15.0', '0.16.13', '0.17.0', '12.63.0', '12.64.0', '12.66.0', '0.31.0', '0.32.0', '0.15.21', '0.15.24', '0.15.28', '0.15.32', '30 standard MCP tools'];
+const OLD = ['0.14.1', '0.15.0', '0.16.13', '0.17.0', '0.18.0', '12.63.0', '12.64.0', '12.66.0', '0.31.0', '0.32.0', '0.15.21', '0.15.24', '0.15.28', '0.15.32', '30 standard MCP tools'];
 
 function watch(page: Page, baseURL: string) {
   const errors: string[] = [];
@@ -188,7 +188,7 @@ test('the components show today\'s releases', async ({ page, request }) => {
   const hrefs = await page.locator('a[href*="github.com/mikeparcewski/wicked-studio/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
   expect(hrefs.filter((h) => /\/tree\//.test(h!)).length, 'a GitHub tree link').toBeGreaterThan(0);
   expect(hrefs.filter((h) => /\/blob\/[^/]+\/CHANGELOG\.md/.test(h!)).length, 'a release-notes link').toBeGreaterThan(0);
-  for (const h of hrefs) if (/\/(tree|blob)\//.test(h!)) expect(h).toMatch(/\/(tree|blob)\/v0\.16\.0(\/|$)/);
+  for (const h of hrefs) if (/\/(tree|blob)\//.test(h!)) expect(h).toMatch(/\/(tree|blob)\/v0\.16\.1(\/|$)/);
   expect(html).toContain('github.com/mikeparcewski/wicked-interactive/blob/v0.16.0/CHANGELOG.md');
 });
 
