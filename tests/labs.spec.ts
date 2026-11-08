@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { pageData } from './export-data.mjs';
 
 // Smoke for wickedlabs.ai: the approved lab design (DES-SITES-V2 rev 10.2-final) served as the page, with the
 // operator's 2026-11-03 fixes (the lab's background art, no section links in the header, the family footer) and
@@ -11,15 +12,15 @@ const VIEWPORTS = [
   { width: 390, height: 844 },
 ];
 
-// the release the page describes (release-1104: studio 0.15.0, crew 0.17.0, garden 12.64.0, estate 0.32.0), as it
+// the release the page describes (release-1108: studio 0.16.0, crew 0.18.0, garden 12.66.1, estate 0.32.1), as it
 // must show them; OLD are the releases before it, which must be gone from the page
 const CURRENT = [
-  { repo: 'wicked-studio', ver: '0.15.0', tag: 'v0.15.0' },
-  { repo: 'wicked-crew', ver: '0.17.0', tag: 'v0.17.0' },
-  { repo: 'wicked-garden', ver: '12.64.0', tag: 'v12.64.0' },
-  { repo: 'wicked-estate', ver: '0.32.0', tag: 'v0.32.0' },
+  { repo: 'wicked-studio', ver: '0.16.0', tag: 'v0.16.0' },
+  { repo: 'wicked-crew', ver: '0.18.0', tag: 'v0.18.0' },
+  { repo: 'wicked-garden', ver: '12.66.1', tag: 'v12.66.1' },
+  { repo: 'wicked-estate', ver: '0.32.1', tag: 'v0.32.1' },
 ];
-const OLD = ['0.14.1', '0.16.13', '12.63.0', '0.31.0', '0.15.21', '0.15.24', '30 standard MCP tools'];
+const OLD = ['0.14.1', '0.15.0', '0.16.13', '0.17.0', '12.63.0', '12.64.0', '12.66.0', '0.31.0', '0.32.0', '0.15.21', '0.15.24', '0.15.28', '0.15.32', '30 standard MCP tools'];
 
 function watch(page: Page, baseURL: string) {
   const errors: string[] = [];
@@ -151,10 +152,29 @@ test('the components show today\'s releases', async ({ page, request }) => {
   expect((await page.content()).toLowerCase()).not.toContain('coming soon');
   // under the hood, in the parts view: core-ts and interactive at today's tags
   await page.goto('/#parts', { waitUntil: 'networkidle' });
-  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.28');
-  await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.15.0');
+  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.34');
+  await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.16.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
+  // phase plugins observe a job's events; the catalog never says a plugin adds a step (CS8, catalog-data-v2)
+  expect(html).not.toMatch(/new kind of step|adds? an? (step|check|review) to/);
+  expect(html).toContain("A section in every job's details, drawn from its events.");
+  // the release links name the same tags: each component's tree in the no-JavaScript fallback and every release note
+  for (const c of CURRENT) {
+    expect(html, `${c.repo} tree`).toContain(`github.com/mikeparcewski/${c.repo}/tree/${c.tag}"`);
+    expect(html, `${c.repo} notes`).toContain(`github.com/mikeparcewski/${c.repo}/blob/${c.tag}/CHANGELOG.md`);
+  }
+  expect(html).toContain('github.com/mikeparcewski/wicked-core/blob/core-ts-v0.15.34/CHANGELOG.md');
+  // the product pages build their links from COMP's tags: pin them, and the rendered links on a product page
+  const tags: Record<string, string> = Object.fromEntries(pageData().COMP.map((c: any) => [c.id, c.tag]));
+  for (const c of CURRENT) expect(tags[c.repo.replace('wicked-', '')], c.repo).toBe(c.tag);
+  expect(tags.core).toBe('core-ts-v0.15.34');
+  expect(tags.interactive).toBe('v0.16.0');
+  await page.goto('/#/studio', { waitUntil: 'networkidle' });
+  const hrefs = await page.locator('a[href*="github.com/mikeparcewski/wicked-studio/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
+  expect(hrefs.length).toBeGreaterThan(0);
+  for (const h of hrefs) if (/\/(tree|blob)\//.test(h!)) expect(h).toMatch(/\/(tree|blob)\/v0\.16\.0(\/|$)/);
+  expect(html).toContain('github.com/mikeparcewski/wicked-interactive/blob/v0.16.0/CHANGELOG.md');
 });
 
 test('production settings: the title, no design notes or mockup wording, and media queries Safari before 16.4 understands', async ({ page, request }) => {

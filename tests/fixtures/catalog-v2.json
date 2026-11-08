@@ -251,7 +251,7 @@
    "command": "/competitive",
    "delivers": "report",
    "gate": [
-    "cited-findings"
+    "fidelity-to-source"
    ],
    "options": []
   },
@@ -262,7 +262,7 @@
    "command": "/due-diligence",
    "delivers": "report",
    "gate": [
-    "cited-findings"
+    "fidelity-to-source"
    ],
    "options": []
   },
@@ -273,7 +273,7 @@
    "command": "/find-out",
    "delivers": "report",
    "gate": [
-    "cited-findings"
+    "fidelity-to-source"
    ],
    "options": []
   },
@@ -330,7 +330,6 @@
    "command": "/analyze-docs",
    "delivers": "report",
    "gate": [
-    "cited-findings",
     "fidelity-to-source"
    ],
    "options": []
@@ -353,7 +352,6 @@
    "command": "/critique-doc",
    "delivers": "report",
    "gate": [
-    "cited-findings",
     "fidelity-to-source"
    ],
    "options": []
@@ -460,7 +458,20 @@
    "gate": [
     "fidelity-to-source"
    ],
-   "options": []
+   "options": [
+    {
+     "title": "RFP",
+     "command": "/respond rfp"
+    },
+    {
+     "title": "RFI",
+     "command": "/respond rfi"
+    },
+    {
+     "title": "Questionnaire",
+     "command": "/respond questionnaire"
+    }
+   ]
   },
   {
    "verb": "create",
@@ -471,7 +482,28 @@
    "gate": [
     "fidelity-to-source"
    ],
-   "options": []
+   "options": [
+    {
+     "title": "Condense",
+     "command": "/rework condense"
+    },
+    {
+     "title": "Re-audience",
+     "command": "/rework re-audience"
+    },
+    {
+     "title": "Generalize",
+     "command": "/rework generalize"
+    },
+    {
+     "title": "Convert",
+     "command": "/rework convert"
+    },
+    {
+     "title": "Refresh",
+     "command": "/rework refresh"
+    }
+   ]
   },
   {
    "verb": "create",
