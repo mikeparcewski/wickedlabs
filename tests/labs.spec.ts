@@ -156,6 +156,9 @@ test('the components show today\'s releases', async ({ page, request }) => {
   await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.16.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
+  // phase plugins observe a job's events; the catalog never says a plugin adds a step (CS8, catalog-data-v2)
+  expect(html).not.toMatch(/new kind of step|adds? an? (step|check|review) to/);
+  expect(html).toContain("A section in every job's details, drawn from its events.");
   // the release links name the same tags: each component's tree in the no-JavaScript fallback and every release note
   for (const c of CURRENT) {
     expect(html, `${c.repo} tree`).toContain(`github.com/mikeparcewski/${c.repo}/tree/${c.tag}"`);
