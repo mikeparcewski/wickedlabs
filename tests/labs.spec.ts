@@ -156,6 +156,18 @@ test('the components show today\'s releases', async ({ page, request }) => {
   await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.16.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
+  // the install flow is the installer, then wicked-crew serve, then the local URL (never npx wicked-crew serve alone)
+  expect(html).not.toContain('npx wicked-crew serve');
+  // the no-JavaScript fallback carries the whole flow
+  expect(html).toContain('<code>npx wicked-installer</code>, then <code>wicked-crew serve</code>, then open http://127.0.0.1:7701</li>');
+  // the installer's visible version, not only its tag
+  expect(pageData().COMP.find((c: any) => c.id === 'installer').ver).toBe('0.9.0');
+  // studio's and crew's own install lines: the installer, then serve, then the local URL
+  for (const id of ['studio', 'crew']) {
+    const c = pageData().COMP.find((x: any) => x.id === id);
+    expect(c.install, id).toBe('npx wicked-installer');
+    expect(c.installNote, id).toMatch(/^then wicked-crew serve, and open http:\/\/127\.0\.0\.1:7701/);
+  }
   // phase plugins observe a job's events; the catalog never says a plugin adds a step (CS8, catalog-data-v2)
   expect(html).not.toMatch(/new kind of step|adds? an? (step|check|review) to/);
   expect(html).toContain("A section in every job's details, drawn from its events.");
@@ -323,13 +335,14 @@ test('inbound links keep working: #changes lands on the workflows, #start on the
   const wf = await page.locator('#workflows').boundingBox();
   const st = await page.locator('#start').boundingBox();
   expect(st!.y).toBeGreaterThanOrEqual(wf!.y + wf!.height - 1);
-  await expect(page.locator('#start code')).toHaveText(['npx wicked-installer', 'npx wicked-crew serve']);
+  await expect(page.locator('#start code')).toHaveText(['npx wicked-installer', 'wicked-crew serve']);
+  await expect(page.locator('#start')).toContainText('Then open http://127.0.0.1:7701 and start any workflow above from a studio chat.');
 });
 
 test('each start command has its own Copy button', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/#start', { waitUntil: 'networkidle' });
-  for (const [k, cmd] of [['1', 'npx wicked-installer'], ['2', 'npx wicked-crew serve']]) {
+  for (const [k, cmd] of [['1', 'npx wicked-installer'], ['2', 'wicked-crew serve']]) {
     await expect(page.locator(`[data-copy="${k}"]`)).toHaveAccessibleName(`Copy ${cmd}`);
     await page.locator(`[data-copy="${k}"]`).click();
     await expect(page.locator(`#labCopyMsg${k}`)).toHaveText(`Copied ${cmd} to the clipboard.`);

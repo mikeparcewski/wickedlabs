@@ -41,7 +41,7 @@ const HOOD_REF = {
 const START_LINE = 'It installs the products you pick, for the coding CLIs you use.';
 // relations between the products, each grounded in a capability row the page carries
 const RELATIONS = [
-  { a: 'crew', b: 'studio', sentence: 'wicked-crew ships wicked-studio as its UI', ref: 'lab products.json: studio via wicked-crew (npx wicked-crew serve bundles studio)' },
+  { a: 'crew', b: 'studio', sentence: 'wicked-crew ships wicked-studio as its UI', ref: 'lab products.json: studio via wicked-crew (wicked-crew serve bundles studio)' },
   { a: 'garden', b: 'crew', sentence: 'wicked-garden supplies the skills every agent in a wicked-crew job follows', ref: 'lab capabilities.json row GW', row: 'GW' },
   { a: 'garden', b: 'estate', sentence: 'wicked-garden reads wicked-estate’s code graph', ref: 'lab capabilities.json row G2', row: 'G2' },
 ];

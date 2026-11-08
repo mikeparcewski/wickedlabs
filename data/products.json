@@ -88,7 +88,7 @@
    "a": "crew",
    "b": "studio",
    "sentence": "wicked-crew ships wicked-studio as its UI",
-   "ref": "lab products.json: studio via wicked-crew (npx wicked-crew serve bundles studio)"
+   "ref": "lab products.json: studio via wicked-crew (wicked-crew serve bundles studio)"
   },
   {
    "a": "garden",
