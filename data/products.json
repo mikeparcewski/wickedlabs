@@ -10,8 +10,8 @@
    "eyebrow": "the ADE",
    "expansion": "agentic development environment",
    "tag": "the ADE: agentic development environment",
-   "ver": "0.16.0",
-   "release": "v0.16.0",
+   "ver": "0.16.1",
+   "release": "v0.16.1",
    "headline": "The ADE for running a team of coding agents.",
    "url": "https://wickedlabs.ai/#/studio"
   },
@@ -20,8 +20,8 @@
    "name": "wicked-crew",
    "tier": "component",
    "tag": "runs and checks jobs",
-   "ver": "0.18.0",
-   "release": "v0.18.0",
+   "ver": "0.18.1",
+   "release": "v0.18.1",
    "headline": "The harness for the coding agents you already use.",
    "url": "https://wickedlabs.ai/#/crew"
   },
