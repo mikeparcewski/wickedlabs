@@ -12,15 +12,15 @@ const VIEWPORTS = [
   { width: 390, height: 844 },
 ];
 
-// the release the page describes (release-1108: studio 0.16.0, crew 0.18.0, garden 12.66.0, estate 0.32.1), as it
+// the release the page describes (release-1108: studio 0.16.0, crew 0.18.0, garden 12.66.1, estate 0.32.1), as it
 // must show them; OLD are the releases before it, which must be gone from the page
 const CURRENT = [
   { repo: 'wicked-studio', ver: '0.16.0', tag: 'v0.16.0' },
   { repo: 'wicked-crew', ver: '0.18.0', tag: 'v0.18.0' },
-  { repo: 'wicked-garden', ver: '12.66.0', tag: 'v12.66.0' },
+  { repo: 'wicked-garden', ver: '12.66.1', tag: 'v12.66.1' },
   { repo: 'wicked-estate', ver: '0.32.1', tag: 'v0.32.1' },
 ];
-const OLD = ['0.14.1', '0.15.0', '0.16.13', '0.17.0', '12.63.0', '12.64.0', '0.31.0', '0.32.0', '0.15.21', '0.15.24', '0.15.28', '30 standard MCP tools'];
+const OLD = ['0.14.1', '0.15.0', '0.16.13', '0.17.0', '12.63.0', '12.64.0', '12.66.0', '0.31.0', '0.32.0', '0.15.21', '0.15.24', '0.15.28', '0.15.32', '30 standard MCP tools'];
 
 function watch(page: Page, baseURL: string) {
   const errors: string[] = [];
@@ -152,7 +152,7 @@ test('the components show today\'s releases', async ({ page, request }) => {
   expect((await page.content()).toLowerCase()).not.toContain('coming soon');
   // under the hood, in the parts view: core-ts and interactive at today's tags
   await page.goto('/#parts', { waitUntil: 'networkidle' });
-  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.32');
+  await expect(page.locator('#pc-core > span:last-child')).toHaveText('core-ts 0.15.34');
   await expect(page.locator('#pc-interactive > span:last-child')).toHaveText('0.16.0');
   const html = await (await request.get('/')).text();
   for (const old of OLD) expect(html.includes(old), old).toBe(false);
@@ -164,11 +164,11 @@ test('the components show today\'s releases', async ({ page, request }) => {
     expect(html, `${c.repo} tree`).toContain(`github.com/mikeparcewski/${c.repo}/tree/${c.tag}"`);
     expect(html, `${c.repo} notes`).toContain(`github.com/mikeparcewski/${c.repo}/blob/${c.tag}/CHANGELOG.md`);
   }
-  expect(html).toContain('github.com/mikeparcewski/wicked-core/blob/core-ts-v0.15.32/CHANGELOG.md');
+  expect(html).toContain('github.com/mikeparcewski/wicked-core/blob/core-ts-v0.15.34/CHANGELOG.md');
   // the product pages build their links from COMP's tags: pin them, and the rendered links on a product page
   const tags: Record<string, string> = Object.fromEntries(pageData().COMP.map((c: any) => [c.id, c.tag]));
   for (const c of CURRENT) expect(tags[c.repo.replace('wicked-', '')], c.repo).toBe(c.tag);
-  expect(tags.core).toBe('core-ts-v0.15.32');
+  expect(tags.core).toBe('core-ts-v0.15.34');
   expect(tags.interactive).toBe('v0.16.0');
   await page.goto('/#/studio', { waitUntil: 'networkidle' });
   const hrefs = await page.locator('a[href*="github.com/mikeparcewski/wicked-studio/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
