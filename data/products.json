@@ -78,17 +78,17 @@
  ],
  "getStarted": {
   "cmd": "npx wicked-installer",
-  "release": "v0.8.2",
+  "release": "v0.9.0",
   "ref": "wicked-installer README (Quick start)",
   "line": "It installs the products you pick, for the coding CLIs you use.",
-  "lineRef": "wicked-installer README at v0.8.2, Quick start: pick a bundle or select products individually; it detects which AI coding CLIs you have installed"
+  "lineRef": "wicked-installer README at v0.9.0, Quick start: pick a bundle or select products individually; it detects which AI coding CLIs you have installed"
  },
  "relations": [
   {
    "a": "crew",
    "b": "studio",
    "sentence": "wicked-crew ships wicked-studio as its UI",
-   "ref": "lab products.json: studio via wicked-crew (npx wicked-crew serve bundles studio)"
+   "ref": "lab products.json: studio via wicked-crew (wicked-crew serve bundles studio)"
   },
   {
    "a": "garden",
